@@ -1,12 +1,10 @@
 import json
 import streamlit as st
-import pandas as pd
-from pycaret.clustering import load_model, predict_model
-import plotly.express as px 
+import pandas as pd  # type: ignore
+from pycaret.clustering import load_model, predict_model  # type: ignore
+import plotly.express as px  # type: ignore
 
-st.title("Czy masz pokrewną duszę?")
-
-MODEL_NAME = ("welcome_survey_clustering_pipeline_v1") 
+MODEL_NAME = 'welcome_survey_clustering_pipeline_v1'
 
 DATA = 'welcome_survey_simple_v1.csv'
 
@@ -21,23 +19,22 @@ def get_model():
 def get_cluster_names_and_descriptions():
     with open(CLUSTER_NAMES_AND_DESCRIPTIONS, "r", encoding='utf-8') as f:
         return json.loads(f.read())
-    
-@st.cache_data #to nam zaczyta dane z pliku tylko raz
+
+@st.cache_data
 def get_all_participants():
-    model = get_model()
     all_df = pd.read_csv(DATA, sep=';')
     df_with_clusters = predict_model(model, data=all_df)
 
     return df_with_clusters
 
 with st.sidebar:
-    st.header("powiedz nam coś o sobie")
-    st.markdown("Pomożemy ci znaleźć kogoś podobnego")
+    st.header("Powiedz nam coś o sobie")
+    st.markdown("Pomożemy Ci znaleźć osoby, które mają podobne zainteresowania")
     age = st.selectbox("Wiek", ['<18', '25-34', '45-54', '35-44', '18-24', '>=65', '55-64', 'unknown'])
     edu_level = st.selectbox("Wykształcenie", ['Podstawowe', 'Średnie', 'Wyższe'])
     fav_animals = st.selectbox("Ulubione zwierzęta", ['Brak ulubionych', 'Psy', 'Koty', 'Inne', 'Koty i Psy'])
     fav_place = st.selectbox("Ulubione miejsce", ['Nad wodą', 'W lesie', 'W górach', 'Inne'])
-    gender = st.radio("Płeć", ['Mężczyzna', 'Kobieta']) 
+    gender = st.radio("Płeć", ['Mężczyzna', 'Kobieta'])
 
     person_df = pd.DataFrame([
         {
@@ -45,8 +42,8 @@ with st.sidebar:
             'edu_level': edu_level,
             'fav_animals': fav_animals,
             'fav_place': fav_place,
-            'gender': gender
-            }
+            'gender': gender,
+        }
     ])
 
 model = get_model()
@@ -101,3 +98,4 @@ fig.update_layout(
     yaxis_title="Liczba osób",
 )
 st.plotly_chart(fig)
+
