@@ -1,4 +1,4 @@
-plotly.express
+plotly
 pandas 
 streamlit
-pycaret.clustering
+pycaret
